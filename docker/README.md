@@ -6,7 +6,7 @@ TODO - презентация
 
 ### Сборка простого образа
 
-В папке [simple_dockerfile](./simple_dockefile):
+В папке [simple_dockerfile](./simple_dockerfile):
 ```
 docker build . -t simple_app
 docker run --rm simple_app

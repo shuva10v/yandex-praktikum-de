@@ -1,0 +1,5 @@
+psycopg2==2.9.3
+voila==0.3.6
+ipykernel==6.15.3
+matplotlib==3.6.0
+pandas==1.5.0
