@@ -1,0 +1,28 @@
+<html>
+	<head>
+		<title>
+			Vote for Language
+		</title>
+	</head>
+	<script>
+		function vote(item) {
+          var userId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString(16).padStart(16, '0');
+          fetch('/vote', {
+            method: 'POST',
+			headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({'userId': userId, 'item': item})
+		  })
+            .then((response) => response.json())
+            .then((data) => console.log(data));
+		}
+	</script>
+<body>
+<h3>Vote for Language</h3>
+<form>
+	<button onclick="vote('python')">Python</button>
+	<button onclick="vote('с++')">C++</button>
+	<button onclick="vote('java')">Java</button>
+	<button onclick="vote('go')">Go</button>
+</form>
+</body>
+</html>
