@@ -23,7 +23,7 @@ python -c "from random import choice; print('SECURE_PASSWORD=' + ''.join([choice
 cd visualisation
 docker build . -t visualisation
 cd ../
-docker-compose build
-docker-compose up -d
-docker-compose logs --tail=10 -f
+docker compose build
+docker compose up -d
+docker compose logs --tail=10 -f
 ```

@@ -7,4 +7,4 @@ COPY tracker.py /opt/app/
 COPY index.html /opt/app/
 EXPOSE 8082
 WORKDIR /opt/app/
-CMD ["uvicorn", "tracker:app", "--port 8082", "--host 0.0.0.0"]
+CMD ["uvicorn", "tracker:app", "--port", "8082", "--host", "0.0.0.0"]

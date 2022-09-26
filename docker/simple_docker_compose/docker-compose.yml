@@ -17,8 +17,8 @@ services:
   postgres:
     image: postgres:14.5
     restart: always
-    ports:
-      - "25432:5432"
+#    ports:
+#      - "25432:5432"
     volumes:
       - ./data:/var/lib/postgresql/data
       #- pgdata:/var/lib/postgresql/data
