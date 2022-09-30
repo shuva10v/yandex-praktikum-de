@@ -25,3 +25,12 @@ docker compose build
 docker compose up -d
 docker compose logs --tail=10 -f
 ```
+
+### Пример сборки через gradle
+
+В папке [gradle_sample](./gradle_sample):
+
+```
+./gradlew docker
+docker run --rm gradle_sample
+```

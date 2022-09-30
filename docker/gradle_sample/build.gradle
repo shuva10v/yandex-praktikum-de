@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+    id 'com.palantir.docker' version '0.34.0'
+}
+
+group 'io.shuvalov.docker.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'io.shuvalov.docker.example.Main'
+        )
+    }
+}
+
+docker {
+    name "${project.name}"
+    dockerfile file("Dockerfile")
+    files tasks.jar.outputs
+    buildArgs(['JAR_FILE': "${project.name}-${project.version}.jar"])
+}
