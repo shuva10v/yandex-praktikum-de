@@ -1,0 +1,89 @@
+version: '3'
+services:
+  postgres:
+    image: postgres
+    ports:
+      - "15432:5432"
+    environment:
+      POSTGRES_PASSWORD: ${SECURE_PASSWORD}
+      POSTGRES_DB: testdb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+      - ./postgresDBSamples:/samples
+#      - ./postgres/init_scripts/:/docker-entrypoint-initdb.d/
+    command: postgres -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.track=all -c max_connections=200
+
+  grafana:
+    image: grafana/grafana:9.3.6
+    ports:
+      - "3000:3000"
+
+  prometheus:
+    image: prom/prometheus:v2.42.0
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  zookeeper:
+    image: docker.io/bitnami/zookeeper:3.8
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+
+  kafka:
+    image: docker.io/bitnami/kafka:3.3
+    ports:
+      - "9092:9092"
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper
+
+  kafka_ui:
+    image: obsidiandynamics/kafdrop
+    ports:
+      - "30082:9000"
+    environment:
+      - KAFKA_BROKERCONNECT=kafka:9092
+    depends_on:
+      - kafka
+
+  postgres_exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter
+    environment:
+      - DATA_SOURCE_NAME=postgresql://postgres:${SECURE_PASSWORD}@postgres:5432/postgres?sslmode=disable
+    ports:
+      - "9187:9187"
+    depends_on:
+      - postgres
+
+  kafka_exporter:
+    image: danielqsj/kafka-exporter
+    command: ["--kafka.server=kafka:9092"]
+    ports:
+      - "9308:9308"
+    #mem_limit: 128m
+    #mem_reservation: 64m
+    logging:
+        driver: "json-file"
+        options:
+          max-size: "5m"
+    depends_on:
+      - kafka
+
+  application:
+    build:
+      context: ./consumer_app
+      dockerfile: Dockerfile
+    ports:
+      - "18000:8000"
+    depends_on:
+      - kafka
+      - zookeeper
+

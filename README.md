@@ -2,3 +2,4 @@
 
 * [Воркшоп по docker](./docker)
 * [Воркшоп по mongodb](./mongodb)
+* [Воркшоп по grafana](./grafana)
